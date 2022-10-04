@@ -80,7 +80,6 @@ let rec watchFiles (paths: seq<string>, cancellationToken: CancellationToken) =
     asyncSeq {
         Log.Verbose("Processing initial paths")
         for path in paths do
-            Log.Verbose("")
             let fileAttributes =
                 File.GetAttributes(path)
 

@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FShorter.Cli", "FShorter.Cli\FShorter.Cli.fsproj", "{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FShorter.Core", "FShorter.Core\FShorter.Core.fsproj", "{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FShorter", "FShorter\FShorter.fsproj", "{CEE2D46D-7931-4298-8820-17CF926BCBE2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CEE2D46D-7931-4298-8820-17CF926BCBE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CEE2D46D-7931-4298-8820-17CF926BCBE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CEE2D46D-7931-4298-8820-17CF926BCBE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CEE2D46D-7931-4298-8820-17CF926BCBE2}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

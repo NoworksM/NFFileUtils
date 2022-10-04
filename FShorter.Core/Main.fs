@@ -16,6 +16,8 @@ open Serilog.Events
 
 type PathInfo = { Path: string; IsDirectory: bool }
 
+let supportedFileTypesFilters = [|"*.jpg"; "*.jpeg"; "*.png"; "*.gif"; "*.webp"|]
+
 let sortFile debug (matchInfo: ImageInfo) =
     try
         let root =
@@ -97,11 +99,25 @@ let rec watchFiles (paths: seq<string>, cancellationToken: CancellationToken) =
             ()
         
         for directory in directories do
-            let watcher = new FileSystemWatcher(directory)
-            watcher.NotifyFilter <- NotifyFilters.LastWrite
-            watcher.Created.Add listener
-            watcher.Renamed.Add listener
-            watchers.Add watcher
+            let createWatcherForFileType filter =
+                let watcher = new FileSystemWatcher(directory)
+                watcher.NotifyFilter <-  NotifyFilters.Attributes
+                                 ||| NotifyFilters.CreationTime
+                                 ||| NotifyFilters.DirectoryName
+                                 ||| NotifyFilters.FileName
+                                 ||| NotifyFilters.LastAccess
+                                 ||| NotifyFilters.LastWrite
+                                 ||| NotifyFilters.Security
+                                 ||| NotifyFilters.Size;
+                watcher.IncludeSubdirectories <- true
+                watcher.Filter <- filter
+                watcher.EnableRaisingEvents <- true
+                watcher.Created.Add listener
+                watcher.Renamed.Add listener
+                watcher.Changed.Add listener
+                watcher
+            
+            supportedFileTypesFilters |> Seq.map createWatcherForFileType |> watchers.AddRange
         
         while not cancellationToken.IsCancellationRequested do
             let! path = pathChannel.Reader.ReadAsync(cancellationToken).AsTask() |> Async.AwaitTask

@@ -53,7 +53,7 @@ let rec walkPaths(paths: AsyncSeq<string>) =
     }
 
 let rec sortFiles debug (paths: AsyncSeq<string>) =
-    let matcher = compositePathMatcher [|defaultSortedImageSorter; defaultFanSubEpisodeImageSorter; defaultFanSubMovieImageSorter|]
+    let matcher = compositePathMatcher [|defaultSortedEpisodeSorter; defaultFanSubEpisodeImageSorter; defaultSortedMovieSorter; defaultFanSubMovieImageSorter|]
     
     let sf = sortFile debug
     

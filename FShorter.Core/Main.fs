@@ -1,5 +1,6 @@
 ﻿module FShorter.Core.Main
 
+open System
 open System.Collections.Generic
 open System.IO
 open System.Threading
@@ -16,23 +17,26 @@ open Serilog.Events
 type PathInfo = { Path: string; IsDirectory: bool }
 
 let sortFile debug (matchInfo: ImageInfo) =
-    let root =
-        Directory.GetParent(Path.GetDirectoryName(matchInfo.Path))
+    try
+        let root =
+            Directory.GetParent(Path.GetDirectoryName(matchInfo.Path))
 
-    let destinationDirectory = Path.Combine(root.FullName, matchInfo.Show)
-    let destination = Path.Combine(destinationDirectory, Path.GetFileName(matchInfo.Path))
+        let destinationDirectory = Path.Combine(root.FullName, matchInfo.Show)
+        let destination = Path.Combine(destinationDirectory, Path.GetFileName(matchInfo.Path))
 
-    Log.Information("Moving file \"{OldPath}\" to \"{NewPath}\"", matchInfo.Path, destination)
-    
-    if not <| Directory.Exists(destinationDirectory) then
-        Log.Debug("Creating directory \"{Directory}\"", destinationDirectory)
+        Log.Information("Moving file \"{OldPath}\" to \"{NewPath}\"", matchInfo.Path, destination)
+        
+        if not <| Directory.Exists(destinationDirectory) then
+            Log.Debug("Creating directory \"{Directory}\"", destinationDirectory)
+            if not debug then
+                Directory.CreateDirectory(destinationDirectory) |> ignore
+        else
+            Log.Verbose("Directory already exists")
+        
         if not debug then
-            Directory.CreateDirectory(destinationDirectory) |> ignore
-    else
-        Log.Verbose("Directory already exists")
-    
-    if not debug then
-        File.Move(matchInfo.Path, destination)
+            File.Move(matchInfo.Path, destination)
+    with
+        | ex -> Log.Error(ex, "An error occurred when trying to sort file {Path}", matchInfo.Path)
 
 
 let rec walkPaths(paths: AsyncSeq<string>) =
@@ -125,6 +129,8 @@ type Arguments =
     | [<AltCommandLine("-w")>] Watch
     | [<AltCommandLine("-v")>] Verbose
     | [<AltCommandLine("-d")>] Debug
+    | [<AltCommandLine("-a", "--log-to-config")>] LogToAppData
+    | [<AltCommandLine("-o")>] Output of path: string
     | [<MainCommand; Last>] Paths of paths: string
 
     interface IArgParserTemplate with
@@ -133,32 +139,38 @@ type Arguments =
             | Watch -> "watch files in directory"
             | Verbose -> "verbose logging"
             | Debug -> "run fshorter in debug mode (no files will be moved)"
+            | LogToAppData -> "log data to the application data folder (%APPDATA%, $HOME/.config, etc...)"
+            | Output _ -> "optional output path"
             | Paths _ -> "paths to sort files in"
 
 let mainAsync(args, name, isConsoleApplication) =
     let cts = new CancellationTokenSource()
     
     let parser =
-        ArgumentParser.Create<Arguments>(programName = name)
+        ArgumentParser.Create<Arguments>(programName = name, helpTextMessage = "fshorter is a program for sorting anime screenshots to a specific folder")
 
     let argsV = Array.skip 1 args
     
-    let parsedArgs =
-        parser.ParseCommandLine argsV
-    
-    let logLevel = if parsedArgs.Contains Verbose then LogEventLevel.Verbose else LogEventLevel.Information
-    
-    Log.Logger <- configureLogger isConsoleApplication logLevel
-
-    let paths = parsedArgs.GetResults Paths
-    
-    let debug = parsedArgs.Contains Debug
-
-    async {
-        if parsedArgs.Contains Watch then
-            do! watchFiles(paths, cts.Token) |> sortFiles debug 
-        else
-            do! AsyncSeq.ofSeq paths |> walkPaths |> sortFiles debug
+    try 
+        let parsedArgs =
+            parser.ParseCommandLine argsV
         
-        do! Log.CloseAndFlushAsync().AsTask() |> Async.AwaitTask
-    }
+        let logLevel = if parsedArgs.Contains Verbose then LogEventLevel.Verbose else LogEventLevel.Information
+        
+        Log.Logger <- configureLogger isConsoleApplication logLevel
+
+        let paths = parsedArgs.GetResults Paths
+        
+        let debug = parsedArgs.Contains Debug
+
+        async {
+            if parsedArgs.Contains Watch then
+                do! watchFiles(paths, cts.Token) |> sortFiles debug 
+            else
+                do! AsyncSeq.ofSeq paths |> walkPaths |> sortFiles debug
+            
+            do! Log.CloseAndFlushAsync().AsTask() |> Async.AwaitTask
+        }
+    with
+        | :? ArguParseException -> Console.Out.WriteLineAsync(parser.PrintUsage()) |> Async.AwaitTask 
+        | ex -> Console.Error.WriteLineAsync(ex.Message) |> Async.AwaitTask

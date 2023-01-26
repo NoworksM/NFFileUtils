@@ -1,4 +1,4 @@
-﻿namespace FShorter.Core
+﻿namespace NFFileUtils.MpvScreenshotSorter.Core
 
 open System
 open System.IO

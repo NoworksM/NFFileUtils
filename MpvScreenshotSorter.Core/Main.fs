@@ -1,4 +1,4 @@
-﻿module FShorter.Core.Main
+﻿module NFFileUtils.MpvScreenshotSorter.Core.Main
 
 open System
 open System.Collections.Generic
@@ -7,11 +7,8 @@ open System.Threading
 open System.Threading.Channels
 open Argu
 open FSharp.Control
-open FShorter.Core.Matchers
+open NFFileUtils.MpvScreenshotSorter.Core.Matchers
 open Serilog
-open Destructurama.FSharp
-open FShorter.Core.AsyncExtensions
-open FSharp.Control.AsyncSeqExtensions
 open Serilog.Events
 
 type PathInfo = { Path: string; IsDirectory: bool }
@@ -142,7 +139,7 @@ let configureLogger isConsoleApplication logLevel =
     if isConsoleApplication then
         configBuilder.WriteTo.Console(outputTemplate = "{Message:lj}{NewLine}{Exception}").CreateLogger()
     else
-        configBuilder.WriteTo.File("fshorter.log", restrictedToMinimumLevel = logLevel, rollingInterval = RollingInterval.Day).CreateLogger()
+        configBuilder.WriteTo.File("mpvshotsort.log", restrictedToMinimumLevel = logLevel, rollingInterval = RollingInterval.Day).CreateLogger()
 
 type Arguments =
     | [<AltCommandLine("-w")>] Watch
@@ -157,7 +154,7 @@ type Arguments =
             match s with
             | Watch -> "watch files in directory"
             | Verbose -> "verbose logging"
-            | Debug -> "run fshorter in debug mode (no files will be moved)"
+            | Debug -> "run in debug mode (no files will be moved)"
             | LogToAppData -> "log data to the application data folder (%APPDATA%, $HOME/.config, etc...)"
             | Output _ -> "optional output path"
             | Paths _ -> "paths to sort files in"
@@ -166,7 +163,7 @@ let mainAsync(args, name, isConsoleApplication) =
     let cts = new CancellationTokenSource()
     
     let parser =
-        ArgumentParser.Create<Arguments>(programName = name, helpTextMessage = "fshorter is a program for sorting anime screenshots to a specific folder")
+        ArgumentParser.Create<Arguments>(programName = name, helpTextMessage = "mpvshotsort is a program for sorting anime screenshots to a specific folder")
 
     let argsV = Array.skip 1 args
     

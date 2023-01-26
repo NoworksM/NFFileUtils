@@ -1,7 +1,7 @@
 ﻿open System
-open FShorter.Core.Main
+open NFFileUtils.MpvScreenshotSorter.Core.Main
 
 async {
     do! Async.SwitchToThreadPool()
-    return! mainAsync(Environment.GetCommandLineArgs(), "fshorter", false)
+    return! mainAsync(Environment.GetCommandLineArgs(), "mpvshotsort", false)
 } |> Async.RunSynchronously

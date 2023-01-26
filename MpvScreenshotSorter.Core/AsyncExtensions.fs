@@ -1,4 +1,4 @@
-﻿module FShorter.Core.AsyncExtensions
+﻿module NFFileUtils.MpvScreenshotSorter.Core.AsyncExtensions
 
 open System
 open System.ComponentModel

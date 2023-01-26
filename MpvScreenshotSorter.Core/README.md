@@ -1,6 +1,6 @@
-# FShorter
+# MpvScreenshotSorter.Core
 
-FShorter is a simple program to automate the sorting of screenshots mainly for anime files. Mostly done to replace an old Python script I had to do the same
+MpvScreenshotSorter.Core is a simple program to automate the sorting of screenshots mainly for anime files. Mostly done to replace an old Python script I had to do the same
 thing for stuff I'm watching on my computer.
 
 | Argument                                     | Default Value          | Description                                                                                                           |

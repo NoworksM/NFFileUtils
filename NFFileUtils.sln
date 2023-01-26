@@ -1,10 +1,10 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FShorter.Cli", "FShorter.Cli\FShorter.Cli.fsproj", "{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MpvScreenshotSorter.Cli", "MpvScreenshotSorter.Cli\MpvScreenshotSorter.Cli.fsproj", "{0BD43302-5516-4B13-AE69-D2E0F8A9FD74}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FShorter.Core", "FShorter.Core\FShorter.Core.fsproj", "{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MpvScreenshotSorter.Core", "MpvScreenshotSorter.Core\MpvScreenshotSorter.Core.fsproj", "{541C5AB8-91CB-44DD-A7FD-0C5B77C3CEBF}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FShorter", "FShorter\FShorter.fsproj", "{CEE2D46D-7931-4298-8820-17CF926BCBE2}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MpvScreenshotSorter", "MpvScreenshotSorter\MpvScreenshotSorter.fsproj", "{CEE2D46D-7931-4298-8820-17CF926BCBE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

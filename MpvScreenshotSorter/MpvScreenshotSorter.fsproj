@@ -3,7 +3,8 @@
     <PropertyGroup>
         <OutputType>WinExe</OutputType>
         <TargetFramework>net6.0</TargetFramework>
-        <AssemblyName>fshorterw</AssemblyName>
+        <AssemblyName>mpvshotsortw</AssemblyName>
+        <RootNamespace>NFFileUtils.MpvScreenshotSorter</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
@@ -11,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\FShorter.Core\FShorter.Core.fsproj" />
+      <ProjectReference Include="..\MpvScreenshotSorter.Core\MpvScreenshotSorter.Core.fsproj" />
     </ItemGroup>
 
     <ItemGroup>

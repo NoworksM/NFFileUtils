@@ -38,20 +38,24 @@ let sortFile debug (matchInfo: ImageInfo) =
         if not debug then
             File.Move(matchInfo.Path, destination)
     with
+        | :? FileNotFoundException as ex -> Log.Error(ex, "File {Path} no longer exists", matchInfo.Path)
         | ex -> Log.Error(ex, "An error occurred when trying to sort file {Path}", matchInfo.Path)
 
 
 let rec walkPaths(paths: AsyncSeq<string>) =
     asyncSeq {
         for path in paths do
-            let pathAttributes = File.GetAttributes path
-            
-            if pathAttributes.HasFlag FileAttributes.Directory then
-                Log.Verbose("Searching directory {Path}", path)
-                yield! walkPaths <| AsyncSeq.ofSeq(Directory.GetFiles(path))
-            else
-                Log.Verbose("Found file {Path}", path)
-                yield path
+            try
+                let pathAttributes = File.GetAttributes path
+                
+                if pathAttributes.HasFlag FileAttributes.Directory then
+                    Log.Verbose("Searching directory {Path}", path)
+                    yield! walkPaths <| AsyncSeq.ofSeq(Directory.GetFiles(path))
+                else
+                    Log.Verbose("Found file {Path}", path)
+                    yield path
+            with
+                | ex -> Log.Error(ex, "An unknown error occurred while trying to sort path {Path}", path)
     }
 
 let rec sortFiles debug (paths: AsyncSeq<string>) =
@@ -136,9 +140,9 @@ let configureLogger isConsoleApplication logLevel =
                             .MinimumLevel.Is(logLevel)
     
     if isConsoleApplication then
-        configBuilder.WriteTo.Console().CreateLogger()
+        configBuilder.WriteTo.Console(outputTemplate = "{Message:lj}{NewLine}{Exception}").CreateLogger()
     else
-        configBuilder.WriteTo.File("", restrictedToMinimumLevel = logLevel, rollingInterval = RollingInterval.Day).CreateLogger()
+        configBuilder.WriteTo.File("fshorter.log", restrictedToMinimumLevel = logLevel, rollingInterval = RollingInterval.Day).CreateLogger()
 
 type Arguments =
     | [<AltCommandLine("-w")>] Watch
